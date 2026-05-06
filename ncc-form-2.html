@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NCC - Scheda Evento</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0d1117;
+  --surface: #161b22;
+  --surface2: #21262d;
+  --border: #30363d;
+  --accent: #f0a500;
+  --accent2: #25d366;
+  --text: #e6edf3;
+  --muted: #7d8590;
+  --danger: #f85149;
+  --radius: 6px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 14px;
+  min-height: 100vh;
+  padding: 24px 16px 60px;
+}
+header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 32px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+}
+.badge {
+  background: var(--accent);
+  color: #000;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 3px;
+  letter-spacing: 1px;
+}
+header h1 { font-size: 18px; font-weight: 500; }
+#clock { color: var(--muted); font-size: 13px; margin-left: auto; font-family: 'IBM Plex Mono', monospace; }
+.form-grid { display: grid; gap: 20px; max-width: 860px; margin: 0 auto; }
+.section { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+.sec-head { background: var(--surface2); border-bottom: 1px solid var(--border); padding: 10px 16px; display: flex; align-items: center; gap: 8px; }
+.sec-head .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
+.sec-head h2 { font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 600; letter-spacing: 1.5px; color: var(--accent); text-transform: uppercase; }
+.sec-body { padding: 16px; display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
+.field { display: flex; flex-direction: column; gap: 5px; }
+.field.full { grid-column: 1 / -1; }
+label { font-family: 'IBM Plex Mono', monospace; font-size: 10px; font-weight: 500; color: var(--muted); letter-spacing: 0.8px; text-transform: uppercase; }
+input, select, textarea { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); color: var(--text); font-family: 'IBM Plex Sans', sans-serif; font-size: 13px; padding: 8px 10px; width: 100%; transition: border-color 0.15s; -webkit-appearance: none; text-transform: uppercase; }
+input[type="date"], input[type="time"], input[type="number"] { text-transform: none; }
+input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 2px rgba(240,165,0,0.15); }
+select option { background: var(--surface2); }
+textarea { resize: vertical; min-height: 70px; }
+.mot-label { grid-column: 1 / -1; border-top: 1px solid var(--border); padding-top: 10px; margin-top: 4px; font-family: 'IBM Plex Mono', monospace; font-size: 10px; font-weight: 600; color: var(--accent); letter-spacing: 1px; text-transform: uppercase; }
+.actions { display: flex; gap: 12px; flex-wrap: wrap; max-width: 860px; margin: 24px auto 20px; }
+.btn { padding: 11px 22px; border-radius: var(--radius); font-family: 'IBM Plex Mono', monospace; font-size: 12px; font-weight: 600; letter-spacing: 0.8px; cursor: pointer; border: none; transition: all 0.15s; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; }
+.btn-primary { background: var(--accent); color: #000; }
+.btn-primary:hover { background: #ffb822; }
+.btn-wa { background: var(--accent2); color: #fff; }
+.btn-wa:hover { background: #20bd5a; }
+.btn-reset { background: none; border: 1px solid var(--border); color: var(--muted); }
+.btn-reset:hover { border-color: var(--danger); color: var(--danger); }
+.naz-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 10px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+.tog {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 5px 10px;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  background: var(--surface2);
+  color: var(--muted);
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.tog:hover { border-color: var(--accent); color: var(--text); }
+.tog.on { background: var(--accent); color: #000; border-color: var(--accent); font-weight: 700; }
+#preview-wrap { display: none; }
+#preview-wrap.on { display: block; }
+.prev-head { background: var(--surface2); border-bottom: 1px solid var(--border); padding: 10px 16px; display: flex; align-items: center; justify-content: space-between; }
+.prev-head h2 { font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 600; letter-spacing: 1.5px; color: var(--accent2); text-transform: uppercase; }
+#copy-btn { background: none; border: 1px solid var(--border); color: var(--muted); font-family: 'IBM Plex Mono', monospace; font-size: 10px; padding: 4px 10px; border-radius: var(--radius); cursor: pointer; letter-spacing: 0.5px; }
+#copy-btn:hover { border-color: var(--accent); color: var(--accent); }
+#preview-text { padding: 16px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; line-height: 1.8; white-space: pre-wrap; color: var(--text); word-break: break-word; }
+.prev-foot { padding: 12px 16px; border-top: 1px solid var(--border); display: flex; gap: 10px; flex-wrap: wrap; }
+#wa-link { display: none; }
+@media (max-width: 600px) { .sec-body { grid-template-columns: 1fr; } .actions { flex-direction: column; } .btn { justify-content: center; } }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="badge">NCC</div>
+  <h1>Scheda Evento Sbarco</h1>
+  <span id="clock"></span>
+</header>
+
+<div class="form-grid">
+
+  <div class="section">
+    <div class="sec-head"><div class="dot"></div><h2>Identificazione Evento</h2></div>
+    <div class="sec-body">
+      <div class="field full">
+        <label>Localita</label>
+        <div class="naz-grid" data-group="localita" style="max-height:none; grid-template-columns: repeat(auto-fill, minmax(140px,1fr));">
+          <button type="button" class="tog" data-val="BRINDISI" onclick="radioClick(this)">BRINDISI</button>
+          <button type="button" class="tog" data-val="CARBONIA" onclick="radioClick(this)">CARBONIA</button>
+          <button type="button" class="tog" data-val="CROTONE" onclick="radioClick(this)">CROTONE</button>
+          <button type="button" class="tog" data-val="LAMPEDUSA" onclick="radioClick(this)">LAMPEDUSA</button>
+          <button type="button" class="tog" data-val="PANTELLERIA" onclick="radioClick(this)">PANTELLERIA</button>
+          <button type="button" class="tog" data-val="PORTO EMPEDOCLE" onclick="radioClick(this)">PORTO EMPEDOCLE</button>
+          <button type="button" class="tog" data-val="POZZALLO" onclick="radioClick(this)">POZZALLO</button>
+          <button type="button" class="tog" data-val="ROCCELLA JONICA" onclick="radioClick(this)">ROCCELLA JONICA</button>
+          <button type="button" class="tog" data-val="SIRACUSA" onclick="radioClick(this)">SIRACUSA</button>
+          <button type="button" class="tog" data-val="TRAPANI" onclick="radioClick(this)">TRAPANI</button>
+        </div>
+      </div>
+      <div class="field">
+        <label>Molo/Approdo</label>
+        <input type="text" id="f_molo" placeholder="es. Molo Favarolo, Teulada">
+      </div>
+      <div class="field">
+        <label>N. Evento Giornaliero</label>
+        <input type="text" id="f_num_evento" placeholder="es. 1 oppure MEDEVAC">
+      </div>
+      <div class="field">
+        <label>Data Evento</label>
+        <input type="date" id="f_data_evento">
+      </div>
+      <div class="field full">
+        <label>Tipo Evento</label>
+        <div class="naz-grid" data-group="tipo_evento" style="max-height:none; grid-template-columns: repeat(auto-fill, minmax(180px,1fr));">
+          <button type="button" class="tog" data-val="SAR" onclick="radioClick(this)">SAR</button>
+          <button type="button" class="tog" data-val="LAW ENFORCEMENT" onclick="radioClick(this)">LAW ENFORCEMENT</button>
+          <button type="button" class="tog" data-val="SBARCO AUTONOMO/RINTRACCIO A TERRA" onclick="radioClick(this)">SBARCO AUTONOMO/RINTRACCIO A TERRA</button>
+          <button type="button" class="tog" data-val="MEDEVAC" onclick="radioClick(this)">MEDEVAC</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="sec-head"><div class="dot"></div><h2>Intercetto/Trasbordo/Rintraccio</h2></div>
+    <div class="sec-body">
+      <div class="field"><label>Ora</label><input type="time" id="f_ora_int"></div>
+      <div class="field"><label>Data</label><input type="date" id="f_data_int"></div>
+      <div class="field full">
+        <label>Coordinate</label>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+          <div style="display:flex; flex-direction:column; gap:5px;">
+            <label style="font-size:9px; color:var(--accent);">NORD (gradi/min)</label>
+            <div style="display:flex; gap:6px; align-items:center;">
+              <input type="number" id="f_coord_n_g" min="0" max="90" placeholder="/" style="width:70px; flex-shrink:0;">
+              <span style="color:var(--muted); font-family:monospace;">&#176;</span>
+              <input type="number" id="f_coord_n_m" min="0" max="59" placeholder="/" style="width:70px; flex-shrink:0;">
+              <span style="color:var(--muted); font-family:monospace;">' N</span>
+            </div>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:5px;">
+            <label style="font-size:9px; color:var(--accent);">EST (gradi/min)</label>
+            <div style="display:flex; gap:6px; align-items:center;">
+              <input type="number" id="f_coord_e_g" min="0" max="180" placeholder="/" style="width:70px; flex-shrink:0;">
+              <span style="color:var(--muted); font-family:monospace;">&#176;</span>
+              <input type="number" id="f_coord_e_m" min="0" max="59" placeholder="/" style="width:70px; flex-shrink:0;">
+              <span style="color:var(--muted); font-family:monospace;">' E</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="sec-head"><div class="dot"></div><h2>Sbarco</h2></div>
+    <div class="sec-body">
+      <div class="field"><label>Inizio Sbarco</label><input type="time" id="f_ora_ini"></div>
+      <div class="field"><label>Fine Sbarco</label><input type="time" id="f_ora_fin"></div>
+      <div class="field full"><label>Unita Operante/i</label><input type="text" id="f_unita" placeholder="es. GDF V1307, CP 322, FX SWE KBV476, ONG NADIR"></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="sec-head"><div class="dot"></div><h2>Migranti</h2></div>
+    <div class="sec-body">
+      <div class="field"><label>Totale</label><input type="number" id="f_tot" min="0" placeholder="/"></div>
+      <div class="field"><label>Uomini</label><input type="number" id="f_uomini" min="0" placeholder="/"></div>
+      <div class="field"><label>Donne</label><input type="number" id="f_donne" min="0" placeholder="/"></div>
+      <div class="field"><label>Minori</label><input type="number" id="f_minori" min="0" placeholder="/"></div>
+      <div class="field"><label>Salme</label><input type="number" id="f_salme" min="0" placeholder="/"></div>
+      <div class="field"><label>MEDEVAC INFO</label><input type="text" id="f_medevac" placeholder="/"></div>
+      <div class="field full">
+        <label>Nazionalita Dichiarate</label>
+        <div class="naz-grid" data-group="naz">
+          <button type="button" class="tog" data-id="naz_afghanistan" data-val="AFGHANISTAN" onclick="togClick(this)">AFGHANISTAN</button>
+          <button type="button" class="tog" data-id="naz_algeria" data-val="ALGERIA" onclick="togClick(this)">ALGERIA</button>
+          <button type="button" class="tog" data-id="naz_bangladesh" data-val="BANGLADESH" onclick="togClick(this)">BANGLADESH</button>
+          <button type="button" class="tog" data-id="naz_burkina_faso" data-val="BURKINA FASO" onclick="togClick(this)">BURKINA FASO</button>
+          <button type="button" class="tog" data-id="naz_camerun" data-val="CAMERUN" onclick="togClick(this)">CAMERUN</button>
+          <button type="button" class="tog" data-id="naz_costa_davorio" data-val="COSTA D'AVORIO" onclick="togClick(this)">COSTA D'AVORIO</button>
+          <button type="button" class="tog" data-id="naz_egitto" data-val="EGITTO" onclick="togClick(this)">EGITTO</button>
+          <button type="button" class="tog" data-id="naz_eritrea" data-val="ERITREA" onclick="togClick(this)">ERITREA</button>
+          <button type="button" class="tog" data-id="naz_etiopia" data-val="ETIOPIA" onclick="togClick(this)">ETIOPIA</button>
+          <button type="button" class="tog" data-id="naz_gambia" data-val="GAMBIA" onclick="togClick(this)">GAMBIA</button>
+          <button type="button" class="tog" data-id="naz_ghana" data-val="GHANA" onclick="togClick(this)">GHANA</button>
+          <button type="button" class="tog" data-id="naz_guinea" data-val="GUINEA" onclick="togClick(this)">GUINEA</button>
+          <button type="button" class="tog" data-id="naz_guinea_bissau" data-val="GUINEA BISSAU" onclick="togClick(this)">GUINEA BISSAU</button>
+          <button type="button" class="tog" data-id="naz_guinea_konakry" data-val="GUINEA KONAKRY" onclick="togClick(this)">GUINEA KONAKRY</button>
+          <button type="button" class="tog" data-id="naz_iran" data-val="IRAN" onclick="togClick(this)">IRAN</button>
+          <button type="button" class="tog" data-id="naz_iraq" data-val="IRAQ" onclick="togClick(this)">IRAQ</button>
+          <button type="button" class="tog" data-id="naz_libia" data-val="LIBIA" onclick="togClick(this)">LIBIA</button>
+          <button type="button" class="tog" data-id="naz_mali" data-val="MALI" onclick="togClick(this)">MALI</button>
+          <button type="button" class="tog" data-id="naz_marocco" data-val="MAROCCO" onclick="togClick(this)">MAROCCO</button>
+          <button type="button" class="tog" data-id="naz_niger" data-val="NIGER" onclick="togClick(this)">NIGER</button>
+          <button type="button" class="tog" data-id="naz_nigeria" data-val="NIGERIA" onclick="togClick(this)">NIGERIA</button>
+          <button type="button" class="tog" data-id="naz_pakistan" data-val="PAKISTAN" onclick="togClick(this)">PAKISTAN</button>
+          <button type="button" class="tog" data-id="naz_senegal" data-val="SENEGAL" onclick="togClick(this)">SENEGAL</button>
+          <button type="button" class="tog" data-id="naz_sierra_leone" data-val="SIERRA LEONE" onclick="togClick(this)">SIERRA LEONE</button>
+          <button type="button" class="tog" data-id="naz_siria" data-val="SIRIA" onclick="togClick(this)">SIRIA</button>
+          <button type="button" class="tog" data-id="naz_somalia" data-val="SOMALIA" onclick="togClick(this)">SOMALIA</button>
+          <button type="button" class="tog" data-id="naz_sud_sudan" data-val="SUD SUDAN" onclick="togClick(this)">SUD SUDAN</button>
+          <button type="button" class="tog" data-id="naz_sudan" data-val="SUDAN" onclick="togClick(this)">SUDAN</button>
+          <button type="button" class="tog" data-id="naz_tunisia" data-val="TUNISIA" onclick="togClick(this)">TUNISIA</button>
+          <button type="button" class="tog" data-id="naz_turchia" data-val="TURCHIA" onclick="togClick(this)">TURCHIA</button>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:8px;">
+          <div style="display:flex; flex-direction:column; gap:5px;">
+            <label style="font-size:9px; color:var(--accent);">ALTRA (opzionale)</label>
+            <input type="text" id="f_naz_extra1" placeholder="/">
+          </div>
+          <div style="display:flex; flex-direction:column; gap:5px;">
+            <label style="font-size:9px; color:var(--accent);">ALTRA (opzionale)</label>
+            <input type="text" id="f_naz_extra2" placeholder="/">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="sec-head"><div class="dot"></div><h2>Provenienza Dichiarata</h2></div>
+    <div class="sec-body">
+      <div class="field"><label>Localita di Partenza</label><input type="text" id="f_loc_p" placeholder="/"></div>
+      <div class="field full">
+        <label>Stato</label>
+        <div class="naz-grid" data-group="stato_p" style="max-height:none; grid-template-columns: repeat(auto-fill, minmax(120px,1fr));">
+          <button type="button" class="tog" data-val="ALGERIA" onclick="radioClick(this)">ALGERIA</button>
+          <button type="button" class="tog" data-val="TUNISIA" onclick="radioClick(this)">TUNISIA</button>
+          <button type="button" class="tog" data-val="LIBIA" onclick="radioClick(this)">LIBIA</button>
+          <button type="button" class="tog" data-val="EGITTO" onclick="radioClick(this)">EGITTO</button>
+          <button type="button" class="tog" data-val="TURCHIA" onclick="radioClick(this)">TURCHIA</button>
+        </div>
+      </div>
+      <div class="field"><label>Giorno Partenza</label><input type="date" id="f_data_p"></div>
+      <div class="field"><label>Orario Partenza</label><input type="time" id="f_ora_p"></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="sec-head"><div class="dot"></div><h2>Imbarcazione</h2></div>
+    <div class="sec-body">
+      <div class="field">
+        <label>Materiale</label>
+        <div class="naz-grid" data-group="materiale" style="max-height:none; grid-template-columns: repeat(auto-fill, minmax(120px,1fr));">
+          <button type="button" class="tog" data-val="LEGNO" onclick="radioClick(this)">LEGNO</button>
+          <button type="button" class="tog" data-val="VETRORESINA" onclick="radioClick(this)">VETRORESINA</button>
+          <button type="button" class="tog" data-val="GOMMONE" onclick="radioClick(this)">GOMMONE</button>
+          <button type="button" class="tog" data-val="METALLO" onclick="radioClick(this)">METALLO</button>
+        </div>
+      </div>
+      <div class="field"><label>Colore</label><input type="text" id="f_colore" placeholder="/"></div>
+      <div class="field"><label>Lunghezza (mt)</label><input type="number" id="f_lung" min="0" step="0.1" placeholder="/"></div>
+      <div class="field">
+        <label>Tipo Motore</label>
+        <div class="naz-grid" data-group="tipo_motore" style="max-height:none; grid-template-columns: repeat(auto-fill, minmax(130px,1fr));">
+          <button type="button" class="tog" data-val="FUORIBORDO" onclick="radioClick(this)">FUORIBORDO</button>
+          <button type="button" class="tog" data-val="ENTROBORDO" onclick="radioClick(this)">ENTROBORDO</button>
+        </div>
+      </div>
+      <div class="field">
+        <label>Fast Boat (&ge; 100hp)</label>
+        <div class="naz-grid" data-group="fastboat" style="max-height:none; padding:8px;">
+          <button type="button" class="tog" data-val="FAST BOAT" onclick="togClick(this)">FAST BOAT</button>
+        </div>
+      </div>
+
+      <div class="mot-label">Motore 1</div>
+      <div class="field"><label>N. Motori</label><input type="number" id="m1_n" min="0" placeholder="/"></div>
+      <div class="field full">
+        <label>Marca / Modello</label>
+        <div class="naz-grid" data-group="marca1" style="max-height:none; grid-template-columns: repeat(auto-fill, minmax(110px,1fr));">
+          <button type="button" class="tog" data-val="YAMAHA" onclick="radioClick(this)">YAMAHA</button>
+          <button type="button" class="tog" data-val="SUZUKI" onclick="radioClick(this)">SUZUKI</button>
+          <button type="button" class="tog" data-val="MERCURY" onclick="radioClick(this)">MERCURY</button>
+          <button type="button" class="tog" data-val="HONDA" onclick="radioClick(this)">HONDA</button>
+          <button type="button" class="tog" data-val="HIDEA" onclick="radioClick(this)">HIDEA</button>
+          <button type="button" class="tog" data-val="TOHATSU" onclick="radioClick(this)">TOHATSU</button>
+        </div>
+      </div>
+      <div class="field"><label>Potenza HP</label><input type="text" id="m1_hp" placeholder="/"></div>
+
+      <div class="mot-label">Motore 2 (opzionale)</div>
+      <div class="field"><label>N. Motori</label><input type="number" id="m2_n" min="0" placeholder="/"></div>
+      <div class="field full">
+        <label>Marca / Modello</label>
+        <div class="naz-grid" data-group="marca2" style="max-height:none; grid-template-columns: repeat(auto-fill, minmax(110px,1fr));">
+          <button type="button" class="tog" data-val="YAMAHA" onclick="radioClick(this)">YAMAHA</button>
+          <button type="button" class="tog" data-val="SUZUKI" onclick="radioClick(this)">SUZUKI</button>
+          <button type="button" class="tog" data-val="MERCURY" onclick="radioClick(this)">MERCURY</button>
+          <button type="button" class="tog" data-val="HONDA" onclick="radioClick(this)">HONDA</button>
+          <button type="button" class="tog" data-val="HIDEA" onclick="radioClick(this)">HIDEA</button>
+          <button type="button" class="tog" data-val="TOHATSU" onclick="radioClick(this)">TOHATSU</button>
+        </div>
+      </div>
+      <div class="field"><label>Potenza HP</label><input type="text" id="m2_hp" placeholder="/"></div>
+
+      <div class="mot-label">Motore 3 (opzionale)</div>
+      <div class="field"><label>N. Motori</label><input type="number" id="m3_n" min="0" placeholder="/"></div>
+      <div class="field full">
+        <label>Marca / Modello</label>
+        <div class="naz-grid" data-group="marca3" style="max-height:none; grid-template-columns: repeat(auto-fill, minmax(110px,1fr));">
+          <button type="button" class="tog" data-val="YAMAHA" onclick="radioClick(this)">YAMAHA</button>
+          <button type="button" class="tog" data-val="SUZUKI" onclick="radioClick(this)">SUZUKI</button>
+          <button type="button" class="tog" data-val="MERCURY" onclick="radioClick(this)">MERCURY</button>
+          <button type="button" class="tog" data-val="HONDA" onclick="radioClick(this)">HONDA</button>
+          <button type="button" class="tog" data-val="HIDEA" onclick="radioClick(this)">HIDEA</button>
+          <button type="button" class="tog" data-val="TOHATSU" onclick="radioClick(this)">TOHATSU</button>
+        </div>
+      </div>
+      <div class="field"><label>Potenza HP</label><input type="text" id="m3_hp" placeholder="/"></div>
+
+      <div class="mot-label">Carburante e strumenti di navigazione</div>
+      <div class="field"><label>N. Taniche</label><input type="number" id="f_ntaniche" min="0" placeholder="/"></div>
+      <div class="field"><label>Litri per Tanica</label><input type="number" id="f_lttaniche" min="0" placeholder="/"></div>
+      <div class="field">
+        <label>Serbatoio Interno</label>
+        <div class="naz-grid" data-group="serbatoio" style="max-height:none; padding:8px;">
+          <button type="button" class="tog" data-val="SERBATOIO INTERNO" onclick="togClick(this)">SERBATOIO INTERNO</button>
+        </div>
+      </div>
+      <div class="field"><label>Capacita Serbatoio (lt)</label><input type="number" id="f_serbatoio_lt" min="0" placeholder="es. 200"></div>
+      <div class="field full">
+        <label>Strumento di Navigazione</label>
+        <div class="naz-grid" data-group="nav" style="max-height:auto; grid-template-columns: repeat(auto-fill, minmax(140px,1fr));">
+          <button type="button" class="tog" data-id="tog_gps" data-val="GPS" onclick="togClick(this)">GPS</button>
+          <button type="button" class="tog" data-id="tog_thuraya" data-val="THURAYA" onclick="togClick(this)">THURAYA</button>
+          <button type="button" class="tog" data-id="tog_app_cellulare" data-val="APP CELLULARE" onclick="togClick(this)">APP CELLULARE</button>
+          <button type="button" class="tog" data-id="tog_bussola" data-val="BUSSOLA" onclick="togClick(this)">BUSSOLA</button>
+          <button type="button" class="tog" data-id="tog_starlink" data-val="STARLINK" onclick="togClick(this)">STARLINK</button>
+        </div>
+      </div>
+      <div class="field full">
+      <div class="mot-label">Stato Imbarcazione</div>
+        <div class="naz-grid" data-group="sorte" style="max-height:none; grid-template-columns: repeat(auto-fill, minmax(140px,1fr));">
+          <button type="button" class="tog" data-val="ALLA DERIVA" onclick="radioClick(this)">ALLA DERIVA</button>
+          <button type="button" class="tog" data-val="SEQUESTRATA" onclick="radioClick(this)">SEQUESTRATA</button>
+          <button type="button" class="tog" data-val="NON RIVENUTA" onclick="radioClick(this)">NON RIVENUTA</button>
+          <button type="button" class="tog" data-val="AFFONDATA" onclick="radioClick(this)">AFFONDATA</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="sec-head"><div class="dot"></div><h2>Viaggio</h2></div>
+    <div class="sec-body">
+      <div class="field"><label>Prezzo Viaggio</label><input type="text" id="f_prezzo" placeholder="es. 1.500 USD"></div>
+      <div class="field full">
+        <label>Destinazione Finale</label>
+        <div class="naz-grid" data-group="dest" style="max-height:auto; grid-template-columns: repeat(auto-fill, minmax(90px,1fr));">
+          <button type="button" class="tog" data-id="tog_ita" data-val="ITA" onclick="togClick(this)">ITA</button>
+          <button type="button" class="tog" data-id="tog_aut" data-val="AUT" onclick="togClick(this)">AUT</button>
+          <button type="button" class="tog" data-id="tog_bel" data-val="BEL" onclick="togClick(this)">BEL</button>
+          <button type="button" class="tog" data-id="tog_dnk" data-val="DNK" onclick="togClick(this)">DNK</button>
+          <button type="button" class="tog" data-id="tog_fra" data-val="FRA" onclick="togClick(this)">FRA</button>
+          <button type="button" class="tog" data-id="tog_deu" data-val="DEU" onclick="togClick(this)">DEU</button>
+          <button type="button" class="tog" data-id="tog_nld" data-val="NLD" onclick="togClick(this)">NLD</button>
+          <button type="button" class="tog" data-id="tog_esp" data-val="ESP" onclick="togClick(this)">ESP</button>
+          <button type="button" class="tog" data-id="tog_swe" data-val="SWE" onclick="togClick(this)">SWE</button>
+          <button type="button" class="tog" data-id="tog_uk" data-val="UK" onclick="togClick(this)">UK</button>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:8px;">
+          <div style="display:flex; flex-direction:column; gap:5px;">
+            <label style="font-size:9px; color:var(--accent);">ALTRA (opzionale)</label>
+            <input type="text" id="f_dest_extra1" placeholder="/">
+          </div>
+          <div style="display:flex; flex-direction:column; gap:5px;">
+            <label style="font-size:9px; color:var(--accent);">ALTRA (opzionale)</label>
+            <input type="text" id="f_dest_extra2" placeholder="/">
+          </div>
+        </div>
+      </div>
+      <div class="field full"><label>NOTE</label><textarea id="f_note" placeholder="Eventuali note aggiuntive..."></textarea></div>
+    </div>
+  </div>
+
+</div>
+
+<div class="actions">
+  <button class="btn btn-primary" id="btn-genera">Genera Messaggio</button>
+  <button class="btn btn-reset" id="btn-reset" onclick="resetForm()">Reset</button>
+</div>
+
+<div class="form-grid">
+  <div class="section" id="preview-wrap">
+    <div class="prev-head">
+      <h2>Messaggio Generato</h2>
+      <button id="copy-btn">COPIA</button>
+    </div>
+    <pre id="preview-text"></pre>
+    <div class="prev-foot">
+      <a id="wa-link" class="btn btn-wa" target="_blank">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Invia su WhatsApp
+      </a>
+    </div>
+  </div>
+</div>
+
+<script>
+function togClick(btn) { btn.classList.toggle('on'); }
+
+function resetForm() {
+  var els = document.querySelectorAll('input, select, textarea');
+  for (var i = 0; i < els.length; i++) {
+    var el = els[i];
+    if (el.id === 'f_data_evento' || el.id === 'f_data_int') {
+      var d = new Date();
+      var m = d.getMonth() + 1;
+      var g = d.getDate();
+      el.value = d.getFullYear() + '-' + (m<10?'0'+m:m) + '-' + (g<10?'0'+g:g);
+    } else {
+      el.value = '';
+    }
+  }
+  var togs = document.querySelectorAll('.tog.on');
+  for (var t = 0; t < togs.length; t++) { togs[t].classList.remove('on'); }
+  var pw = document.getElementById('preview-wrap');
+  if (pw) pw.classList.remove('on');
+  var wa = document.getElementById('wa-link');
+  if (wa) wa.style.display = 'none';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+function radioClick(btn) {
+  var group = btn.parentElement;
+  var btns = group.querySelectorAll('.tog');
+  for (var i=0; i<btns.length; i++) { btns[i].classList.remove('on'); }
+  btn.classList.add('on');
+}
+
+(function() {
+
+  // Orologio
+  function tick() {
+    var d = new Date();
+    var p = function(n) { return (n < 10 ? '0' : '') + n; };
+    document.getElementById('clock').textContent =
+      p(d.getHours()) + ':' + p(d.getMinutes()) + ' ' +
+      p(d.getDate()) + '/' + p(d.getMonth() + 1) + '/' + d.getFullYear();
+  }
+  tick();
+  setInterval(tick, 1000);
+
+  // Data di oggi in formato YYYY-MM-DD
+  var oggi = (function() {
+    var d = new Date();
+    var m = d.getMonth() + 1;
+    var g = d.getDate();
+    return d.getFullYear() + '-' + (m < 10 ? '0' + m : '' + m) + '-' + (g < 10 ? '0' + g : '' + g);
+  }());
+  document.getElementById('f_data_evento').value = oggi;
+  document.getElementById('f_data_int').value = oggi;
+
+  // Leggi campo
+  function g(id) {
+    var el = document.getElementById(id);
+    return el ? el.value.trim() : '';
+  }
+
+  // Formatta data YYYY-MM-DD -> DD/MM/YYYY
+  function fd(s) {
+    if (!s) return '/';
+    var p = s.split('-');
+    if (p.length !== 3) return s;
+    return p[2] + '/' + p[1] + '/' + p[0];
+  }
+
+  // Blocco motore singolo
+  function bm(n, hp, marca) {
+    if (!n && !hp) return null;
+    var r = 'N. Motori: *' + n + '*';
+    if (marca) r = r + ' marca *' + marca + '*';
+    if (hp) r = r + ' Potenza: *' + hp + ' HP*';
+    return r;
+  }
+
+  // Genera messaggio
+  document.getElementById('btn-genera').addEventListener('click', function() {
+    var _locList = document.querySelectorAll('[data-group="localita"] .tog.on');
+    var localita = _locList.length > 0 ? _locList[0].getAttribute('data-val') : '/';
+    var molo      = (g('f_molo') || '/').toUpperCase();
+    var num_ev    = g('f_num_evento') || '/';
+    var data_ev   = fd(g('f_data_evento'));
+    var _tipoEvList = document.querySelectorAll('[data-group="tipo_evento"] .tog.on');
+    var tipo_ev = _tipoEvList.length > 0 ? _tipoEvList[0].getAttribute('data-val') : '/';
+    var ora_int   = g('f_ora_int') || '/';
+    var data_int  = fd(g('f_data_int'));
+    var cn_g = g('f_coord_n_g'); var cn_m = g('f_coord_n_m');
+    var ce_g = g('f_coord_e_g'); var ce_m = g('f_coord_e_m');
+    var coord_n = (cn_g || cn_m) ? ((cn_g || '0') + ' ' + (cn_m || '0')).toUpperCase() : null;
+    var coord_e = (ce_g || ce_m) ? ((ce_g || '0') + ' ' + (ce_m || '0')).toUpperCase() : null;
+    var ora_ini   = g('f_ora_ini') || '/';
+    var ora_fin   = g('f_ora_fin') || '/';
+    var unita     = (g('f_unita') || '/').toUpperCase();
+    var tot       = g('f_tot') || '/';
+    var uomini    = g('f_uomini') || '/';
+    var donne     = g('f_donne') || '/';
+    var minori    = g('f_minori') || '/';
+    var salme     = g('f_salme') || '/';
+    var medevac   = (g('f_medevac') || '/').toUpperCase();
+    var nazArr = [];
+    var _nazList = document.querySelectorAll('[data-group="naz"] .tog.on');
+    for (var _ni = 0; _ni < _nazList.length; _ni++) { nazArr.push(_nazList[_ni].getAttribute('data-val')); }
+    var nazExtra1 = g('f_naz_extra1') ? g('f_naz_extra1').toUpperCase() : '';
+    var nazExtra2 = g('f_naz_extra2') ? g('f_naz_extra2').toUpperCase() : '';
+    if (nazExtra1) nazArr.push(nazExtra1);
+    if (nazExtra2) nazArr.push(nazExtra2);
+    var naz = nazArr.length > 0 ? nazArr.join(', ') : '/';
+    var loc_p     = (g('f_loc_p') || '/').toUpperCase();
+    var _statoPList = document.querySelectorAll('[data-group="stato_p"] .tog.on');
+    var stato_p = _statoPList.length > 0 ? _statoPList[0].getAttribute('data-val') : '/';
+    var data_p    = fd(g('f_data_p'));
+    var ora_p     = g('f_ora_p') || '/';
+    var _matList = document.querySelectorAll('[data-group="materiale"] .tog.on');
+    var mat = _matList.length > 0 ? _matList[0].getAttribute('data-val') : '/';
+    var colore    = (g('f_colore') || '/').toUpperCase();
+    var lung      = g('f_lung') || '/';
+    // marca letta per motore nel blocco motori
+    var ntaniche  = (g('f_ntaniche') || '/').toUpperCase();
+    var lttaniche = (g('f_lttaniche') || '/').toUpperCase();
+    var _sorteList = document.querySelectorAll('[data-group="sorte"] .tog.on');
+    var sorte = _sorteList.length > 0 ? _sorteList[0].getAttribute('data-val') : '/';
+    var navArr = [];
+    var _navList = document.querySelectorAll('[data-group="nav"] .tog.on');
+    for (var _nvi = 0; _nvi < _navList.length; _nvi++) { navArr.push(_navList[_nvi].getAttribute('data-val')); }
+    var nav = navArr.length > 0 ? navArr.join(', ').toUpperCase() : '/';
+    var prezzo    = (g('f_prezzo') || '/').toUpperCase();
+    var destArr = [];
+    var _destList = document.querySelectorAll('[data-group="dest"] .tog.on');
+    for (var _di = 0; _di < _destList.length; _di++) { destArr.push(_destList[_di].getAttribute('data-val')); }
+    var destExtra1 = g('f_dest_extra1') ? g('f_dest_extra1').toUpperCase() : '';
+    var destExtra2 = g('f_dest_extra2') ? g('f_dest_extra2').toUpperCase() : '';
+    if (destExtra1) destArr.push(destExtra1);
+    if (destExtra2) destArr.push(destExtra2);
+    var dest = destArr.length > 0 ? destArr.join(', ') : '/';
+    var note      = (g('f_note') || '/').toUpperCase();
+
+    // Motori
+    var parti = [];
+    var _tipoMotList = document.querySelectorAll('[data-group="tipo_motore"] .tog.on');
+    var tipoMotore = _tipoMotList.length > 0 ? _tipoMotList[0].getAttribute('data-val') : '/';
+    var _m1list = document.querySelectorAll('[data-group="marca1"] .tog.on');
+    var _m1marca = []; for (var _m1i=0;_m1i<_m1list.length;_m1i++){_m1marca.push(_m1list[_m1i].getAttribute('data-val'));}
+    var _m2list = document.querySelectorAll('[data-group="marca2"] .tog.on');
+    var _m2marca = []; for (var _m2i=0;_m2i<_m2list.length;_m2i++){_m2marca.push(_m2list[_m2i].getAttribute('data-val'));}
+    var _m3list = document.querySelectorAll('[data-group="marca3"] .tog.on');
+    var _m3marca = []; for (var _m3i=0;_m3i<_m3list.length;_m3i++){_m3marca.push(_m3list[_m3i].getAttribute('data-val'));}
+    var b1 = bm(g('m1_n'), g('m1_hp'), _m1marca.join(', '));
+    var b2 = bm(g('m2_n'), g('m2_hp'), _m2marca.join(', '));
+    var b3 = bm(g('m3_n'), g('m3_hp'), _m3marca.join(', '));
+    if (b1) parti.push(b1);
+    if (b2) parti.push(b2);
+    if (b3) parti.push(b3);
+    var motori = 'Motore/i: *' + tipoMotore + '*';
+    if (parti.length > 0) motori = motori + '\n' + parti.join('\n');
+    var fbOn = document.querySelector('[data-group="fastboat"] .tog.on');
+    var serbatoioOn = document.querySelector('[data-group="serbatoio"] .tog.on');
+    var serbatoio_lt = (g('f_serbatoio_lt') || '').toUpperCase();
+    if (fbOn) motori = motori + '\n*FAST BOAT*';
+
+    var msg =
+      '*' + localita + '*: *' + molo + '*\n' +
+      'Evento *' + num_ev + '* del *' + data_ev + '*\n' +
+      'Tipo Evento: *' + tipo_ev + '*\n' +
+      '\n' +
+      (tipo_ev === 'SBARCO AUTONOMO/RINTRACCIO A TERRA' ? 'RINTRACCIO:\n' : 'INTERCETTO/TRASBORDO:\n') + 'H. *' + ora_int + '* del *' + data_int + '*\n' +
+      (coord_n ? 'COORDINATE: *' + coord_n + ' N - ' + coord_e + ' E*\n' : '') +
+      '\n' +
+      (tipo_ev !== 'SBARCO AUTONOMO/RINTRACCIO A TERRA' ? 'Inizio sbarco: *' + ora_ini + '*\n' : '') +
+      (tipo_ev !== 'SBARCO AUTONOMO/RINTRACCIO A TERRA' ? 'Fine sbarco: *' + ora_fin + '*\n' : '') +
+      'Unita\u2019 operante: *' + unita + '*\n' +
+      '\n' +
+      'Totale migranti sbarcati *' + tot + '* di cui:\n' +
+      'Uomini *' + uomini + '*\n' +
+      'Donne *' + donne + '*\n' +
+      'Minori *' + minori + '*\n' +
+      '\n' +
+      'Salme *' + salme + '*\n' +
+      'MEDEVAC INFO: *' + medevac + '*\n' +
+      '\n' +
+      'Localita\u2019 di partenza dichiarata: *' + loc_p + '*\n' +
+      'Stato: *' + stato_p + '*\n' +
+      'Giorno partenza: *' + data_p + '*\n' +
+      'Orario partenza: *' + ora_p + '*\n' +
+      '\n' +
+      'Nazionalita\u2019 migranti: *' + naz + '*\n' +
+      '\n' +
+      'Imbarcazione: *' + mat + '*\n' +
+      'Colore: *' + colore + '*\n' +
+      'Lunghezza: *' + lung + ' mt*\n' +
+      motori + '\n' +
+      'Carburante: *' + ntaniche + ' TANICHE* DA *' + lttaniche + ' LT*\n' +
+      (serbatoioOn ? 'Serbatoio interno: *' + serbatoio_lt + ' LT*\n' : '') +
+      'Navigazione con: *' + nav + '*\n' +
+      '\n' +
+      'Stato imbarcazione: *' + sorte + '*\n' +
+      '\n' +
+      'Prezzo viaggio: *' + prezzo + '*\n' +
+      '\n' +
+      'Destinazione finale: *' + dest + '*\n' +
+      '\n' +
+      'NOTE: *' + note + '*\n' +
+      '\n' +
+      '*NCC OK*';
+
+    document.getElementById('preview-text').textContent = msg;
+
+    var pw = document.getElementById('preview-wrap');
+    pw.classList.add('on');
+
+    var wa = document.getElementById('wa-link');
+    wa.href = 'https://wa.me/?text=' + encodeURIComponent(msg);
+    wa.style.display = 'inline-flex';
+
+    pw.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+
+  // Copia
+  document.getElementById('copy-btn').addEventListener('click', function() {
+    var testo = document.getElementById('preview-text').textContent;
+    var btn = document.getElementById('copy-btn');
+    navigator.clipboard.writeText(testo).then(function() {
+      btn.textContent = 'COPIATO!';
+      setTimeout(function() { btn.textContent = 'COPIA'; }, 2000);
+    });
+  });
+
+  // Reset
+  document.getElementById('btn-reset').addEventListener('click', function() {
+    if (!confirm('Vuoi azzerare tutti i campi?')) return;
+    var els = document.querySelectorAll('input, select, textarea');
+    for (var i = 0; i < els.length; i++) {
+      var el = els[i];
+      if (el.id === 'f_data_evento' || el.id === 'f_data_int') {
+        el.value = oggi;
+      } else {
+        el.value = '';
+      }
+    }
+    var _togList = document.querySelectorAll('.tog.on');
+    for (var _ti = 0; _ti < _togList.length; _ti++) { _togList[_ti].classList.remove('on'); }
+    document.getElementById('preview-wrap').classList.remove('on');
+    document.getElementById('wa-link').style.display = 'none';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+}());
+</script>
+</body>
+</html>
