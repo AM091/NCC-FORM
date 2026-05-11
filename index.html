@@ -394,7 +394,9 @@
           <button class="tbtn" onclick="selMateriale(this)">GOMMONE</button>
           <button class="tbtn" onclick="selMateriale(this)">PESCHERECCIO</button>
           <button class="tbtn" onclick="selMateriale(this)">BARCA A VELA</button>
+          <button class="tbtn" onclick="selMateriale(this)">ALTRO</button>
         </div>
+        <input type="text" id="imb_mat_altro" placeholder="es. SURF, CANOA, KAYAK" style="display:none;margin-top:8px;">
       </div>
       <div class="field">
         <label>Colore</label>
@@ -407,7 +409,9 @@
           <button class="tbtn" onclick="this.classList.toggle('on')">ROSSO</button>
           <button class="tbtn" onclick="this.classList.toggle('on')">RUGGINE</button>
           <button class="tbtn" onclick="this.classList.toggle('on')">VERDE</button>
+          <button class="tbtn imb-col-altro-btn" onclick="toggleImbColAltro(this)">ALTRO</button>
         </div>
+        <input type="text" id="imb_col_altro" placeholder="Specifica colore..." style="display:none;margin-top:8px;">
       </div>
       <div class="field">
         <label>Lunghezza (mt)</label>
@@ -429,7 +433,9 @@
           <button class="tbtn" onclick="sel1('imb-lun-grid',this)">18</button>
           <button class="tbtn" onclick="sel1('imb-lun-grid',this)">19</button>
           <button class="tbtn" onclick="sel1('imb-lun-grid',this)">20</button>
+          <button class="tbtn" onclick="sel1('imb-lun-grid',this);toggleImbLunAltro(this)">ALTRO</button>
         </div>
+        <input type="text" inputmode="numeric" id="imb_lun_altro" placeholder="Es. 25" maxlength="2" style="display:none;margin-top:8px;" oninput="validateMig(this)">
       </div>
     </div>
   </div>
@@ -535,7 +541,9 @@
           <button class="tbtn" onclick="sel1('carb-lt-grid',this)">30</button>
           <button class="tbtn" onclick="sel1('carb-lt-grid',this)">40</button>
           <button class="tbtn" onclick="sel1('carb-lt-grid',this)">60</button>
+          <button class="tbtn" onclick="toggleCarbLtAltro(this)">ALTRO</button>
         </div>
+        <input type="text" inputmode="numeric" id="carb_lt_altro" placeholder="es. 75" maxlength="2" style="display:none;margin-top:8px;" oninput="validateMig(this)">
       </div>
 
       <div class="field">
@@ -995,10 +1003,16 @@ function selHP(n, btn) {
 
 // MARCA motore
 function selMarca(n, btn) {
+  const wasOn = btn.classList.contains('on');
   document.querySelectorAll('#eq-marca-' + n + '-grid .tbtn').forEach(b => b.classList.remove('on'));
-  btn.classList.add('on');
   const altroEl = document.getElementById('eq-marca-' + n + '-altro');
-  altroEl.style.display = btn.textContent.trim() === 'ALTRO' ? 'block' : 'none';
+  if (!wasOn) {
+    btn.classList.add('on');
+    altroEl.style.display = btn.textContent.trim() === 'ALTRO' ? 'block' : 'none';
+  } else {
+    altroEl.style.display = 'none';
+    if (altroEl) altroEl.value = '';
+  }
 }
 
 // AGGIUNGI MOTORE
@@ -1083,6 +1097,16 @@ function toggleSerbatoio(btn) {
 function selMateriale(btn) {
   sel1('imb-mat-grid', btn);
   const mat = btn.classList.contains('on') ? btn.textContent.trim() : '';
+  const altroInput = document.getElementById('imb_mat_altro');
+
+  // Mostra campo ALTRO materiale
+  if (mat === 'ALTRO') {
+    altroInput.style.display = 'block';
+    altroInput.focus();
+  } else {
+    altroInput.style.display = 'none';
+    altroInput.value = '';
+  }
 
   // Colore METALLO → auto RUGGINE
   const colBtns = document.querySelectorAll('#imb-col-grid .tbtn');
@@ -1114,17 +1138,49 @@ function selMateriale(btn) {
   const nmotField = document.getElementById('eq-nmot-grid')?.closest('.field');
 
   if (mat === 'PESCHERECCIO' || mat === 'BARCA A VELA') {
-    // Seleziona ENTROBORDO
     tipoMotoreBtns.forEach(b => {
       b.classList.remove('on');
       if (b.textContent.trim() === 'ENTROBORDO') b.classList.add('on');
     });
-    // Nascondi sezioni motori
     motoreSections.forEach(el => { if (el) el.style.display = 'none'; });
   } else {
-    // Ripristina
     tipoMotoreBtns.forEach(b => b.classList.remove('on'));
     motoreSections.forEach(el => { if (el) el.style.display = ''; });
+  }
+}
+
+function toggleImbColAltro(btn) {
+  btn.classList.toggle('on');
+  const input = document.getElementById('imb_col_altro');
+  input.style.display = btn.classList.contains('on') ? 'block' : 'none';
+  if (!btn.classList.contains('on')) input.value = '';
+  else input.focus();
+}
+
+function toggleImbLunAltro(btn) {
+  const input = document.getElementById('imb_lun_altro');
+  if (btn.classList.contains('on')) {
+    input.style.display = 'block';
+    input.focus();
+  } else {
+    input.style.display = 'none';
+    input.value = '';
+  }
+}
+
+function toggleCarbLtAltro(btn) {
+  btn.classList.toggle('on');
+  // Deseleziona gli altri bottoni
+  document.querySelectorAll('#carb-lt-grid .tbtn').forEach(b => {
+    if (b !== btn) b.classList.remove('on');
+  });
+  const input = document.getElementById('carb_lt_altro');
+  if (btn.classList.contains('on')) {
+    input.style.display = 'block';
+    input.focus();
+  } else {
+    input.style.display = 'none';
+    input.value = '';
   }
 }
 
@@ -1330,9 +1386,25 @@ function generateMsg() {
   lines.push('');
 
   // IMBARCAZIONE
-  lines.push(`Imbarcazione: *${getGrid1('imb-mat-grid')}*`);
-  lines.push(`Colore: *${getGridM('imb-col-grid')}*`);
-  lines.push(`Lunghezza: *${getGrid1('imb-lun-grid')} MT*`);
+  // Materiale - se ALTRO usa il campo testo
+  const matVal = getGrid1('imb-mat-grid');
+  const matAltro = document.getElementById('imb_mat_altro');
+  const matFinal = matVal === 'ALTRO' && matAltro && matAltro.value.trim() ? matAltro.value.trim().toUpperCase() : matVal;
+  lines.push(`Imbarcazione: *${matFinal}*`);
+
+  // Colore - aggiunge ALTRO se compilato
+  let colVal = getGridM('imb-col-grid');
+  const colAltro = document.getElementById('imb_col_altro');
+  if (colAltro && colAltro.value.trim()) {
+    colVal = colVal !== '/' ? colVal + ', ' + colAltro.value.trim().toUpperCase() : colAltro.value.trim().toUpperCase();
+  }
+  lines.push(`Colore: *${colVal}*`);
+
+  // Lunghezza - se ALTRO usa il campo testo
+  const lunVal = getGrid1('imb-lun-grid');
+  const lunAltro = document.getElementById('imb_lun_altro');
+  const lunFinal = lunVal === 'ALTRO' && lunAltro && lunAltro.value.trim() ? lunAltro.value.trim() : lunVal;
+  lines.push(`Lunghezza: *${lunFinal} MT*`);
 
   // MOTORI
   const tipoMot = getGrid1('eq-tipo-grid');
@@ -1369,7 +1441,9 @@ function generateMsg() {
 
   // CARBURANTE
   const taniche = v('carb_taniche');
-  const lt = getGrid1('carb-lt-grid');
+  const ltVal = getGrid1('carb-lt-grid');
+  const ltAltro = document.getElementById('carb_lt_altro');
+  const lt = ltVal === 'ALTRO' && ltAltro && ltAltro.value.trim() ? ltAltro.value.trim() : ltVal;
   lines.push(`Carburante: *${taniche}* taniche da *${lt} LT*`);
 
   // Serbatoio interno solo se selezionato
@@ -1534,7 +1608,7 @@ document.getElementById('de_molo').addEventListener('input', function() {
 </script>
 
 <div style="padding: 4px 12px 80px;">
-  <p style="font-size:10px;color:var(--dim);font-family:'IBM Plex Mono',monospace;line-height:1.6;">ver. 4.13.50<br>© 2026 · Tutti i diritti riservati<br>Sviluppato da ADRIANO MANISCALCO - NCC</p>
+  <p style="font-size:10px;color:var(--dim);font-family:'IBM Plex Mono',monospace;line-height:1.6;">ver. 4.13.53<br>© 2026 · Tutti i diritti riservati<br>Sviluppato da ADRIANO MANISCALCO - NCC</p>
 </div>
 
 </body>
