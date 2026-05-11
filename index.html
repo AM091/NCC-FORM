@@ -993,8 +993,9 @@ function renderURExtra() {
 
 // HP motore con controllo automatico Fast Boat
 function selHP(n, btn) {
+  const wasOn = btn.classList.contains('on');
   document.querySelectorAll('#eq-hp-' + n + '-grid .tbtn').forEach(b => b.classList.remove('on'));
-  btn.classList.add('on');
+  if (!wasOn) btn.classList.add('on');
   checkFastBoat();
 }
 
@@ -1080,9 +1081,13 @@ function checkFastBoat() {
   if (total >= 100) {
     fastBtn.classList.add('on');
     fastBtn.style.opacity = '1';
+    fastBtn.style.background = '#f97316';
+    fastBtn.style.borderColor = '#f97316';
   } else {
     fastBtn.classList.remove('on');
     fastBtn.style.opacity = '0.6';
+    fastBtn.style.background = '';
+    fastBtn.style.borderColor = '';
   }
 }
 
@@ -1542,6 +1547,8 @@ function resetForm() {
   const fastBtn = document.getElementById('fast-boat-btn');
   fastBtn.classList.remove('on');
   fastBtn.style.opacity = '0.6';
+  fastBtn.style.background = '';
+  fastBtn.style.borderColor = '';
 
   // Nascondi campi aperti dinamicamente
   const serbLt = document.getElementById('carb_serb_lt');
@@ -1608,7 +1615,7 @@ document.getElementById('de_molo').addEventListener('input', function() {
 </script>
 
 <div style="padding: 4px 12px 80px;">
-  <p style="font-size:10px;color:var(--dim);font-family:'IBM Plex Mono',monospace;line-height:1.6;">ver. 4.13.53<br>© 2026 · Tutti i diritti riservati<br>Sviluppato da ADRIANO MANISCALCO - NCC</p>
+  <p style="font-size:10px;color:var(--dim);font-family:'IBM Plex Mono',monospace;line-height:1.6;">ver. 4.14.54<br>© 2026 · Tutti i diritti riservati<br>Sviluppato da ADRIANO MANISCALCO - NCC</p>
 </div>
 
 </body>
