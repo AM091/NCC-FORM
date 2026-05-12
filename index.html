@@ -189,7 +189,7 @@
       </div>
       <div class="field">
         <label>Data evento</label>
-        <input type="date" id="de_data" onchange="nextField('de_data')">
+        <input type="date" id="de_data" onchange="nextField('de_data')" onblur="nextField('de_data')">
       </div>
     </div>
   </div>
@@ -234,11 +234,11 @@
     <div class="sec-body">
       <div class="field">
         <label>Ora</label>
-        <input type="time" id="it_ora" onchange="nextField('it_ora')">
+        <input type="time" id="it_ora" value="00:00" onchange="nextField('it_ora')">
       </div>
       <div class="field">
         <label>Data</label>
-        <input type="date" id="it_data" onchange="nextField('it_data')">
+        <input type="date" id="it_data" onchange="nextField('it_data')" onblur="nextField('it_data')">
       </div>
       <div class="field" id="it-coord-field">
         <label>Coordinate <span style="font-weight:400;color:var(--dim);font-size:10px;">(es. 34 29 N - 12 27 E)</span></label>
@@ -261,11 +261,11 @@
     <div class="sec-body">
       <div class="field">
         <label>Ora inizio sbarco</label>
-        <input type="time" id="sb_inizio" onchange="nextField('sb_inizio')">
+        <input type="time" id="sb_inizio" value="00:00" onchange="nextField('sb_inizio')">
       </div>
       <div class="field">
         <label>Ora fine sbarco</label>
-        <input type="time" id="sb_fine" onchange="nextField('sb_fine')">
+        <input type="time" id="sb_fine" value="00:00" onchange="nextField('sb_fine')">
       </div>
     </div>
   </div>
@@ -280,23 +280,23 @@
       </div>
       <div class="field">
         <label>Uomini</label>
-        <input type="text" inputmode="numeric" id="mg_uomini" value="/" style="-moz-appearance:textfield;appearance:textfield;" oninput="validateMig(this);calcTotale()" onfocus="clearSlash(this)" onblur="restoreSlash(this)" enterkeyhint="next" onkeydown="if(event.key==='Enter'){event.preventDefault();nextField('mg_uomini');}">
+        <input type="text" inputmode="numeric" id="mg_uomini" onblur="nextField('mg_uomini')" value="/" style="-moz-appearance:textfield;appearance:textfield;" oninput="validateMig(this);calcTotale()" onfocus="clearSlash(this)" onblur="restoreSlash(this)" enterkeyhint="next" onkeydown="if(event.key==='Enter'){event.preventDefault();nextField('mg_uomini');}">
       </div>
       <div class="field">
         <label>Donne</label>
-        <input type="text" inputmode="numeric" id="mg_donne" value="/" style="-moz-appearance:textfield;appearance:textfield;" oninput="validateMig(this);calcTotale()" onfocus="clearSlash(this)" onblur="restoreSlash(this)" enterkeyhint="next" onkeydown="if(event.key==='Enter'){event.preventDefault();nextField('mg_donne');}">
+        <input type="text" inputmode="numeric" id="mg_donne" onblur="nextField('mg_donne')" value="/" style="-moz-appearance:textfield;appearance:textfield;" oninput="validateMig(this);calcTotale()" onfocus="clearSlash(this)" onblur="restoreSlash(this)" enterkeyhint="next" onkeydown="if(event.key==='Enter'){event.preventDefault();nextField('mg_donne');}">
       </div>
       <div class="field">
         <label>Minori</label>
-        <input type="text" inputmode="numeric" id="mg_minori" value="/" style="-moz-appearance:textfield;appearance:textfield;" oninput="validateMig(this);calcTotale()" onfocus="clearSlash(this)" onblur="restoreSlash(this)" enterkeyhint="next" onkeydown="if(event.key==='Enter'){event.preventDefault();nextField('mg_minori');}">
+        <input type="text" inputmode="numeric" id="mg_minori" onblur="nextField('mg_minori')" value="/" style="-moz-appearance:textfield;appearance:textfield;" oninput="validateMig(this);calcTotale()" onfocus="clearSlash(this)" onblur="restoreSlash(this)" enterkeyhint="next" onkeydown="if(event.key==='Enter'){event.preventDefault();nextField('mg_minori');}">
       </div>
       <div class="field">
         <label>Salme</label>
-        <input type="text" inputmode="numeric" id="mg_salme" value="/" style="-moz-appearance:textfield;appearance:textfield;" oninput="validateMig(this)" onfocus="clearSlash(this)" onblur="restoreSlash(this)" enterkeyhint="next" onkeydown="if(event.key==='Enter'){event.preventDefault();nextField('mg_salme');}">
+        <input type="text" inputmode="numeric" id="mg_salme" onblur="nextField('mg_salme')" value="/" style="-moz-appearance:textfield;appearance:textfield;" oninput="validateMig(this)" onfocus="clearSlash(this)" onblur="restoreSlash(this)" enterkeyhint="next" onkeydown="if(event.key==='Enter'){event.preventDefault();nextField('mg_salme');}">
       </div>
       <div class="field">
         <label>MEDEVAC Info</label>
-        <input type="text" id="mg_medevac" placeholder="EVENTUALI INFORMAZIONI RILEVANTI" enterkeyhint="next" onkeydown="if(event.key==='Enter'){event.preventDefault();nextField('mg_medevac');}">
+        <input type="text" id="mg_medevac" onblur="nextField('mg_medevac')" placeholder="EVENTUALI INFORMAZIONI RILEVANTI" enterkeyhint="next" onkeydown="if(event.key==='Enter'){event.preventDefault();nextField('mg_medevac');}">
       </div>
       <div class="field">
         <label>Nazionalità dichiarate</label>
@@ -358,7 +358,7 @@
     <div class="sec-body">
       <div class="field">
         <label>Località di partenza</label>
-        <input type="text" id="dp_localita" placeholder="es. Zuwarah" enterkeyhint="next" onkeydown="if(event.key==='Enter'){event.preventDefault();nextField('dp_localita');}">
+        <input type="text" id="dp_localita" onblur="nextField('dp_localita')" placeholder="es. Zuwarah" enterkeyhint="next" onkeydown="if(event.key==='Enter'){event.preventDefault();nextField('dp_localita');}">
       </div>
       <div class="field">
         <label>Stato</label>
@@ -372,11 +372,11 @@
       </div>
       <div class="field">
         <label>Data partenza</label>
-        <input type="date" id="dp_data" onchange="nextField('dp_data')">
+        <input type="date" id="dp_data" onchange="nextField('dp_data')" onblur="nextField('dp_data')">
       </div>
       <div class="field">
         <label>Ora partenza</label>
-        <input type="time" id="dp_ora" onchange="nextField('dp_ora')">
+        <input type="time" id="dp_ora" value="00:00" onchange="nextField('dp_ora')">
       </div>
     </div>
   </div>
@@ -588,7 +588,7 @@
 
       <div class="field">
         <label>Costo viaggio</label>
-        <input type="text" id="viaggio_costo" placeholder="es. 2000 EUR" enterkeyhint="next" onkeydown="if(event.key==='Enter'){event.preventDefault();nextField('viaggio_costo');}">
+        <input type="text" id="viaggio_costo" onblur="nextField('viaggio_costo')" placeholder="es. 2000 EUR" enterkeyhint="next" onkeydown="if(event.key==='Enter'){event.preventDefault();nextField('viaggio_costo');}">
       </div>
 
       <div class="field">
@@ -690,6 +690,14 @@ const FIELD_FLOW = {
 function nextField(currentId) {
   const nextId = FIELD_FLOW[currentId];
   if (!nextId) return;
+  // Se il campo successivo è nascosto (es. sb_inizio quando SBARCO AUTONOMO), salta al successivo
+  const nextEl = document.getElementById(nextId);
+  if (nextEl && (nextEl.offsetParent === null || nextEl.closest('.section')?.style.display === 'none')) {
+    // Cerca il campo dopo quello nascosto
+    const skipId = FIELD_FLOW[nextId];
+    if (skipId) focusNext(skipId);
+    return;
+  }
   focusNext(nextId);
 }
 
@@ -785,8 +793,13 @@ function getGridM(gridId) {
 function coordNext(el, nextId) {
   el.value = el.value.replace(/[^0-9]/g, '');
   if (el.value.length >= 2) {
-    const next = document.getElementById(nextId);
-    if (next) { next.focus(); next.select(); }
+    // Se è l'ultimo campo coordinate, usa nextField per gestire sezioni nascoste
+    if (el.id === 'it_e2') {
+      nextField('it_e2');
+    } else {
+      const next = document.getElementById(nextId);
+      if (next) { next.focus(); next.select(); }
+    }
   }
 }
 
@@ -1192,9 +1205,15 @@ function toggleCarbLtAltro(btn) {
 function focusNext(id) {
   const el = document.getElementById(id);
   if (!el) return;
-  el.focus();
-  if (el.type === 'date') el.showPicker && el.showPicker();
-  else if (el.select) el.select();
+  if (el.type === 'date' || el.type === 'time') {
+    setTimeout(() => {
+      el.focus();
+      try { el.showPicker && el.showPicker(); } catch(e) {}
+    }, 300);
+  } else {
+    el.focus();
+    if (el.select) el.select();
+  }
 }
 
 // Converte YYYY-MM-DD → DD/MM/YYYY per il messaggio
@@ -1514,6 +1533,7 @@ function resetForm() {
   // Svuota tutti gli input e textarea
   document.querySelectorAll('input, textarea').forEach(el => {
     if (el.id === 'fast-boat-btn') return;
+    if (el.type === 'time') { el.value = '00:00'; return; }
     el.value = '';
   });
 
@@ -1615,7 +1635,7 @@ document.getElementById('de_molo').addEventListener('input', function() {
 </script>
 
 <div style="padding: 4px 12px 80px;">
-  <p style="font-size:10px;color:var(--dim);font-family:'IBM Plex Mono',monospace;line-height:1.6;">ver. 4.14.54-stable<br>© 2026 · Tutti i diritti riservati<br>Sviluppato da ADRIANO MANISCALCO - NCC</p>
+  <p style="font-size:10px;color:var(--dim);font-family:'IBM Plex Mono',monospace;line-height:1.6;">ver. 4.14.60<br>© 2026 · Tutti i diritti riservati<br>Sviluppato da ADRIANO MANISCALCO - NCC</p>
 </div>
 
 </body>
