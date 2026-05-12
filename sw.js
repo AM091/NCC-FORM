@@ -1,4 +1,4 @@
-const CACHE_NAME = 'ncc-tf-v4.14.54';
+const CACHE_NAME = 'ncc-tf-v4.14.54-stable';
 const FILES_TO_CACHE = [
   './',
   './index.html'
